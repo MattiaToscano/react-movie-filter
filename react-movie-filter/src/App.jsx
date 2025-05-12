@@ -12,22 +12,39 @@ const films = [
 
 const App = () => {
   const [search, setSearch] = useState('');
+  const [filteredFilms, setFilteredFilms] = useState(films);
+
+  useEffect(() => {
+    const filtered = search === '' ? films : films.filter(film => film.genre === search);
+    setFilteredFilms(filtered);
+  }, [search])
+
   return (
     <div className="container">
       <h1 className="lista-film">Movie Filter</h1>
-      <select className="form-select" onChange={(e) => setSearch(e.target.value)}>
-        {films.map((film) => (
-          <option key={film.title} value={film.genre}>{film.genre}</option>
+      <select className="form-select" onChange={(e) => setSearch(e.target.value)} value={search}>
+        <option value="">Tutti i generi</option>
+        {[...new Set(films.map(film => film.genre))].map((genre) => (
+          <option key={genre} value={genre}>{genre}</option>
         ))}
       </select>
       <ul className="list-group">
-        {films.map((film) => (
-          <li key={film.id} className="list-group-item">
+        {filteredFilms.map((film) => (
+          <li key={film.title} className="list-group-item">
             <h2>{film.title}</h2>
             <p>{film.genre}</p>
           </li>
         ))}
       </ul>
+      <form action="">
+        <div className="mb-3">
+          <input type="text"
+            onChange={(e) => setSearch(e.target.value)}
+            value={newFilm}
+            placeholder="Aggiungi un film">
+          </input>
+        </div>
+      </form>
     </div>
   )
 }
